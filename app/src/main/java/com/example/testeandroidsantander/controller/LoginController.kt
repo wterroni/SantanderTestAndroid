@@ -3,10 +3,10 @@ package com.example.testeandroidsantander.controller
 import java.util.*
 import java.util.regex.Pattern
 
-class LoginController {
+class LoginController(private val pattern: Pattern = android.util.Patterns.EMAIL_ADDRESS) {
 
-    fun validEmail(email: String): Boolean =
-        android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    fun validEmail(email: String): Boolean = pattern.matcher(email).matches()
+
 
     fun validUpperCase(text: String): Boolean = text.any { it.isUpperCase() }
 

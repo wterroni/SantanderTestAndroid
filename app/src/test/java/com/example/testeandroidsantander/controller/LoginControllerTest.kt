@@ -1,32 +1,51 @@
 package com.example.testeandroidsantander.controller
 
-import io.mockk.*
+import io.mockk.every
+import io.mockk.mockk
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Test
-import org.junit.Assert.*
+import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 
 class LoginControllerTest {
 
-    private val loginController = LoginController()
+    private lateinit var loginController: LoginController
 
-    @Test
-    fun validEmail_IsNotEmail() {
-        val email = "hello@gmail.com"
-        /*mockkObject(android.util.Patterns.EMAIL_ADDRESS)
-        every { android.util.Patterns.EMAIL_ADDRESS } returns Patterns.EMAIL_ADDRESS
-        assertTrue(loginController.validEmail(email))
-
-        mockkObject(android.util.Patterns.EMAIL_ADDRESS)*/
-
-        mockkStatic(android.util.Patterns::class)
-        every { android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() } returns true
+    @Before
+    fun setup() {
+        val pater = mockk<Pattern>()
+        loginController = LoginController(pater)
     }
 
     @Test
     fun validEmail_IsEmail() {
-        val email = "teste@santander.com.br"
+        val email = "hello@gmail.com"
+        val pater = mockk<Pattern>()
+
+        val matcher = mockk<Matcher>()
+        every {  matcher.matches()} returns true
+
+        every { pater.matcher(email)} returns matcher
+        loginController = LoginController(pater)
+
         assertTrue(loginController.validEmail(email))
+    }
+
+    @Test
+    fun validEmail_IsNotEmail() {
+        val email = "hello@gmail.com"
+        val pater = mockk<Pattern>()
+
+        val matcher = mockk<Matcher>()
+        every {  matcher.matches()} returns false
+
+        every { pater.matcher(email)} returns matcher
+        loginController = LoginController(pater)
+
+        assertFalse(loginController.validEmail(email))
     }
 
     @Test
@@ -76,12 +95,10 @@ class LoginControllerTest {
         val cpf = "39144510845"
         assertTrue(loginController.isCPF(cpf))
     }
-}
 
-object Patterns {
-
-    private val EMAIL_PATTERN =
-        "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"
-    val EMAIL_ADDRESS = Pattern.compile(EMAIL_PATTERN)
-
+    @Test
+    fun isCPF_IsNotValidCPF() {
+        val cpf = "00000000000"
+        assertFalse(loginController.isCPF(cpf))
+    }
 }
