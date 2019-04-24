@@ -1,11 +1,25 @@
 package com.example.testeandroidsantander.controller
 
 import java.util.*
+import java.util.regex.Pattern
 
 class LoginController {
 
     fun validEmail(email: String): Boolean =
         android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+
+    fun validUpperCase(text: String): Boolean = text.any { it.isUpperCase() }
+
+    fun validSpecialCharacter(text: String): Boolean {
+        val regex = Pattern.compile("[$&+,:;=\\\\?@#|/'<>.^*()%!-]")
+
+        return regex.matcher(text).find()
+    }
+
+    fun validAlphaNumeric(text: String): Boolean {
+        val regex = Pattern.compile("[^A-Za-z0-9 ]")
+        return regex.matcher(text).find()
+    }
 
     fun isCPF(CPF: String): Boolean {
         if (CPF == "00000000000" ||

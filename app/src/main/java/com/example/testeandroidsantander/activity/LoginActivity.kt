@@ -11,7 +11,7 @@ import java.util.regex.Pattern
 
 class LoginActivity : AppCompatActivity() {
 
-    val loginController = LoginController()
+    private val loginController = LoginController()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,22 +59,9 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun validPassword(): Boolean {
-        return validUpperCase() && validSpecialCharacter() && validAlfaNumeric()
-    }
-
-    private fun validUpperCase(): Boolean {
-        return passwordEditText.text.toString().any { it.isUpperCase() }
-    }
-
-    private fun validSpecialCharacter(): Boolean {
-        val regex = Pattern.compile("[$&+,:;=\\\\?@#|/'<>.^*()%!-]");
-
-        return regex.matcher(passwordEditText.text.toString()).find()
-    }
-
-    private fun validAlfaNumeric(): Boolean {
-        val regex = Pattern.compile("[^A-Za-z0-9 ]")
-        return regex.matcher(passwordEditText.text.toString()).find()
+        return loginController.validUpperCase(passwordEditText.text.toString())
+                && loginController.validSpecialCharacter(passwordEditText.text.toString())
+                && loginController.validAlphaNumeric(passwordEditText.text.toString())
     }
 
 }
